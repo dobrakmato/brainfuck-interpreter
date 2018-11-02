@@ -17,16 +17,19 @@ void Interpreter::opDecrementPointer() {
 }
 
 void Interpreter::opIncrementValue() {
+    boundsCheck();
     memory[pointer]++;
     programCounter++;
 }
 
 void Interpreter::opDecrementValue() {
+    boundsCheck();
     memory[pointer]--;
     programCounter++;
 }
 
 void Interpreter::opPrint() {
+    boundsCheck();
     if (printToStdOut) {
         putchar(memory[pointer]);
     }
@@ -35,6 +38,7 @@ void Interpreter::opPrint() {
 }
 
 void Interpreter::opLoad() {
+    boundsCheck();
     memory[pointer] = static_cast<uint8>(getchar());
     programCounter++;
 }
@@ -58,6 +62,11 @@ void Interpreter::opJmpFwd() {
             }
 
             pos++;
+
+            if(pos >= program.length()) {
+                printf("Unmatched brackets.\n");
+                exit(4);
+            }
         }
 
         programCounter = pos + 1;
@@ -86,6 +95,11 @@ void Interpreter::opJmpBk() {
             }
 
             pos--;
+
+            if(pos < 0) {
+                printf("Unmatched brackets.\n");
+                exit(4);
+            }
         }
 
         programCounter = pos;
@@ -159,6 +173,7 @@ std::string Interpreter::interpret() {
                 break;
             default:
                 // This is comment, ignore it.
+                programCounter++;
                 break;
         }
     }

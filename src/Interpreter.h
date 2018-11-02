@@ -35,6 +35,13 @@ private:
 
     uint8 fetchOp();
 
+    void boundsCheck() {
+        if (pointer < 0 || pointer >= MEMORY_SIZE) {
+            printf("Illegal memory acess detected!\n");
+            exit(3);
+        }
+    }
+
     void opIncrementPointer();
 
     void opDecrementPointer();

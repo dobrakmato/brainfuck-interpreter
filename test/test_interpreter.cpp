@@ -51,3 +51,12 @@ TEST_F(Test, testHelloWorld) {
     interpreter.loadProgram("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
     ASSERT_EQ("Hello World!\n", interpreter.interpret());
 }
+
+// This is a slightly more complex variant that often triggers interpreter bugs.
+TEST_F(Test, testHelloWorld2) {
+    auto interpreter = Interpreter();
+    interpreter.setPrintToStdout(false);
+    interpreter.loadProgram(">++++++++[-<+++++++++>]<.>>+>-[+]++>++>+++[>[->+++<<+++>]<<]>-----.>->\n"
+                            "+++..+++.>-.<<+[>[+>+]>>]<--------------.>>.+++.------.--------.>+.>+.");
+    ASSERT_EQ("Hello World!\n", interpreter.interpret());
+}
