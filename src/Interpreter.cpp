@@ -50,9 +50,14 @@ void Interpreter::opJmpFwd() {
 
         while (true) {
             if (program[pos] == OP_JMP_BK) {
+                if (jumpTable[pos] != JUMP_TABLE_INITIAL_VALUE) {
+                    pos = jumpTable[pos];
+                    break;
+                }
                 paren--;
 
                 if (paren == 0) {
+                    jumpTable[programCounter + 1] = pos;
                     break;
                 }
             }
@@ -63,7 +68,7 @@ void Interpreter::opJmpFwd() {
 
             pos++;
 
-            if(pos >= program.length()) {
+            if (pos >= program.length()) {
                 printf("Unmatched brackets.\n");
                 exit(4);
             }
@@ -83,9 +88,15 @@ void Interpreter::opJmpBk() {
         while (true) {
 
             if (program[pos] == OP_JMP_FW) {
+                if (jumpTable[pos] != JUMP_TABLE_INITIAL_VALUE) {
+                    pos = jumpTable[pos];
+                    break;
+                }
+
                 paren--;
 
                 if (paren == 0) {
+                    jumpTable[programCounter - 1] = pos;
                     break;
                 }
             }
@@ -96,7 +107,7 @@ void Interpreter::opJmpBk() {
 
             pos--;
 
-            if(pos < 0) {
+            if (pos < 0) {
                 printf("Unmatched brackets.\n");
                 exit(4);
             }
@@ -140,6 +151,7 @@ void Interpreter::loadProgram(const std::string &program0) {
  * @return result of program
  */
 std::string Interpreter::interpret() {
+    std::fill_n(jumpTable, JUMP_TABLE_SIZE, JUMP_TABLE_INITIAL_VALUE);
     uint32 programLength = program.length();
     programCounter = 0;
 

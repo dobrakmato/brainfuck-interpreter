@@ -6,6 +6,7 @@
 #define BRAINFUCK_INTERPRETER_INTERPRETER_H
 
 #include <string>
+#include <map>
 
 typedef unsigned char uint8;
 typedef unsigned long long uint32;
@@ -19,7 +20,9 @@ const uint8 OP_LOAD = ',';
 const uint8 OP_JMP_FW = '[';
 const uint8 OP_JMP_BK = ']';
 
-const int MEMORY_SIZE = 30000;
+const uint32 JUMP_TABLE_SIZE = 30000;
+const uint32 JUMP_TABLE_INITIAL_VALUE = 30255;
+const uint32 MEMORY_SIZE = 30000;
 
 /**
  * Simple but powerful Brainfuck interpreter.
@@ -31,6 +34,7 @@ private:
     uint32 programCounter = 0;
     std::string program;
     std::string outputBuffer;
+    uint32 jumpTable[JUMP_TABLE_SIZE] = {};
     bool printToStdOut = true;
 
     uint8 fetchOp();
