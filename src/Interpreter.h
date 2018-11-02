@@ -31,7 +31,6 @@ private:
     uint32 programCounter = 0;
     std::string program;
     std::string outputBuffer;
-    bool printToStdOut = true;
 
     uint8 fetchOp();
 
@@ -50,17 +49,7 @@ private:
 
     void opDecrementValue();
 
-    void opPrint();
-
-    void opLoad();
-
-    void opJmpFwd();
-
-    void opJmpBk();
-
 public:
-    void setPrintToStdout(bool printToStdOut);
-
     uint8 memoryAt(int address);
 
     void loadProgram(const std::string &program);
