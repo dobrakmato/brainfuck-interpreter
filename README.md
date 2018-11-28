@@ -51,6 +51,46 @@ $ ./brainfuck_interpreter --tests
 [  PASSED  ] 7 tests.
 ```
 
+## Optimizations
+
+### Caching jumps in jump table
+
+Brainfuck program use jumps very often, so chaching them seems to be good direction in
+optimizing the interpreter.
+
+By using a cache for remembering addresses of jumps we can easily improve the interpreter
+performance about two times (depending on the running application).
+
+The jump cache is realized by using an optimized hash map. Usage of this jump table can
+be enabled by defining `#define JUMP_TABLE`. The code for using jump table is then added
+to interpreter source code.
+
+After the script execution finishes some statistics are printed to console. We can measure
+the performance without jump table and with.
+
+```
+$ time echo "80" | ./brainfuck_interpreter ../sample-programs/primes.bf 
+Primes up to: 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 
+STAT_JT_MISS=11991978
+STAT_JT_HIT=0
+
+real    0m2.086s
+user    0m2.071s
+sys     0m0.012s
+```
+```
+$ time echo "80" | ./brainfuck_interpreter ../sample-programs/primes.bf 
+Primes up to: 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 
+STAT_JT_MISS=119
+STAT_JT_HIT=11991859
+
+real    0m1.101s
+user    0m1.092s
+sys     0m0.007s
+```
+
+In this example we see almost 2x performance improvement.
+
 ## Sample programs
 
 In the sample-programs directory are some programs that can be run with this interpreter.
