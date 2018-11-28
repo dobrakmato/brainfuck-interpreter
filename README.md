@@ -89,7 +89,8 @@ user    0m1.092s
 sys     0m0.007s
 ```
 
-In this example we see almost 2x performance improvement.
+In this example we see almost 2x performance improvement. Printing of statistics
+can be disabled by passing `--no-stats` as second parameter of the application.
 
 ## Sample programs
 

@@ -25,6 +25,8 @@ int main(int argc, char *argv[]) {
 
     interpreter.loadProgram(program);
     interpreter.interpret();
-    interpreter.stats();
+    if (strcmp(argv[2], "--no-stats") == 0) {
+        interpreter.printStats();
+    }
     return 0;
 }

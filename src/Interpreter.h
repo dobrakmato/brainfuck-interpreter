@@ -71,7 +71,7 @@ public:
 
     std::string interpret();
 
-    void stats();
+    void printStats();
 };
 
 #endif //BRAINFUCK_INTERPRETER_INTERPRETER_H

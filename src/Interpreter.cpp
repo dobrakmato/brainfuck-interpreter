@@ -7,7 +7,7 @@
 unsigned long long int STAT_JT_MISS = 0;
 unsigned long long int STAT_JT_HIT = 0;
 
-void Interpreter::stats() {
+void Interpreter::printStats() {
     printf("STAT_JT_MISS=%llu\n", STAT_JT_MISS);
     printf("STAT_JT_HIT=%llu\n", STAT_JT_HIT);
 }
