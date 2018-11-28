@@ -10,6 +10,8 @@ illegal memory access is detected.
 
 If the program has unmatched brackets, the exit code 4 is returned.
 
+Interpreter performs some optimizations. To see what are they check the **Optimizations** part.
+
 ## Building
 
 You can build the project using CMake to generate build files and then using your favorite build tool.
@@ -53,19 +55,20 @@ $ ./brainfuck_interpreter --tests
 
 ## Optimizations
 
-### Caching jumps in jump table
+### Caching jumps to jump table
 
-Brainfuck program use jumps very often, so chaching them seems to be good direction in
+Brainfuck program use jumps very often, so caching them seems to be good direction in
 optimizing the interpreter.
 
-By using a cache for remembering addresses of jumps we can easily improve the interpreter
-performance about two times (depending on the running application).
+By using a cache for remembering the addresses of jumps we can easily improve the interpreter
+performance to about two times faster (depending on the running application).
 
-The jump cache is realized by using an optimized hash map. Usage of this jump table can
-be enabled by defining `#define JUMP_TABLE`. The code for using jump table is then added
+The jump cache is accomplished by using an hash map. Usage of this jump table can be enabled by 
+defining c macro `#define JUMP_TABLE`. The code for using jump table is then added
 to interpreter source code.
 
-After the script execution finishes some statistics are printed to console. We can measure
+After the script execution finishes some statistics are printed to console. These number can
+help us to get better understanding what is happening in our program. We can measure
 the performance without jump table and with.
 
 ```
