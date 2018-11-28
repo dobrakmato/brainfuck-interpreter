@@ -30,7 +30,7 @@ $ brainfuck-interpreter hello_world.bf
 Hello World!
 ```
 
-## Testings
+## Tests
 
 To run tests, pass the `--tests` as the first argument.
 
@@ -51,7 +51,7 @@ $ ./brainfuck_interpreter --tests
 [  PASSED  ] 7 tests.
 ```
 
-### Sample programs
+## Sample programs
 
 In the sample-programs directory are some programs that can be run with this interpreter.
 

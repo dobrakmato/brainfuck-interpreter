@@ -21,7 +21,7 @@ const uint8 OP_JMP_FW = '[';
 const uint8 OP_JMP_BK = ']';
 
 const uint32 JUMP_TABLE_SIZE = 30000;
-const uint32 JUMP_TABLE_INITIAL_VALUE = 30255;
+constexpr uint32 JUMP_TABLE_INITIAL_VALUE = JUMP_TABLE_SIZE + 2;
 const uint32 MEMORY_SIZE = 30000;
 
 /**
@@ -70,6 +70,8 @@ public:
     void loadProgram(const std::string &program);
 
     std::string interpret();
+
+    void stats();
 };
 
 #endif //BRAINFUCK_INTERPRETER_INTERPRETER_H

@@ -2,6 +2,16 @@
 #include <stdexcept>
 #include "Interpreter.h"
 
+#define JUMP_TABLE
+
+unsigned long long int STAT_JT_MISS = 0;
+unsigned long long int STAT_JT_HIT = 0;
+
+void Interpreter::stats() {
+    printf("STAT_JT_MISS=%llu\n", STAT_JT_MISS);
+    printf("STAT_JT_HIT=%llu\n", STAT_JT_HIT);
+}
+
 void Interpreter::setPrintToStdout(bool printToStdOut0) {
     printToStdOut = printToStdOut0;
 }
@@ -45,19 +55,25 @@ void Interpreter::opLoad() {
 
 void Interpreter::opJmpFwd() {
     if (memory[pointer] == 0) {
+
+#ifdef JUMP_TABLE
+        // check jump table
+        if (jumpTable[programCounter] != JUMP_TABLE_INITIAL_VALUE) {
+            STAT_JT_HIT++;
+            programCounter = jumpTable[programCounter];
+            return;
+        }
+#endif
+
+        // find other parentheses
         uint32 paren = 1;
         uint32 pos = programCounter + 1;
 
         while (true) {
             if (program[pos] == OP_JMP_BK) {
-                if (jumpTable[pos] != JUMP_TABLE_INITIAL_VALUE) {
-                    pos = jumpTable[pos];
-                    break;
-                }
                 paren--;
 
                 if (paren == 0) {
-                    jumpTable[programCounter + 1] = pos;
                     break;
                 }
             }
@@ -74,6 +90,8 @@ void Interpreter::opJmpFwd() {
             }
         }
 
+        STAT_JT_MISS++;
+        jumpTable[programCounter] = pos + 1;
         programCounter = pos + 1;
     } else {
         programCounter++;
@@ -82,21 +100,26 @@ void Interpreter::opJmpFwd() {
 
 void Interpreter::opJmpBk() {
     if (memory[pointer] != 0) {
+
+#ifdef JUMP_TABLE
+        // check jump table
+        if (jumpTable[programCounter] != JUMP_TABLE_INITIAL_VALUE) {
+            STAT_JT_HIT++;
+            programCounter = jumpTable[programCounter];
+            return;
+        }
+#endif
+
+        // find other parentheses
         uint32 paren = 1;
         uint32 pos = programCounter - 1;
 
         while (true) {
 
             if (program[pos] == OP_JMP_FW) {
-                if (jumpTable[pos] != JUMP_TABLE_INITIAL_VALUE) {
-                    pos = jumpTable[pos];
-                    break;
-                }
-
                 paren--;
 
                 if (paren == 0) {
-                    jumpTable[programCounter - 1] = pos;
                     break;
                 }
             }
@@ -113,6 +136,8 @@ void Interpreter::opJmpBk() {
             }
         }
 
+        STAT_JT_MISS++;
+        jumpTable[programCounter] = pos;
         programCounter = pos;
     } else {
         programCounter++;
@@ -142,6 +167,11 @@ uint8 Interpreter::memoryAt(int address) {
  */
 void Interpreter::loadProgram(const std::string &program0) {
     program = program0;
+
+    /* clear old program jump table */
+    for (uint32 i = 0; i < JUMP_TABLE_SIZE; i++) {
+        jumpTable[i] = JUMP_TABLE_INITIAL_VALUE;
+    }
 }
 
 /**

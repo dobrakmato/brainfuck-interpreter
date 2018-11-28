@@ -25,5 +25,6 @@ int main(int argc, char *argv[]) {
 
     interpreter.loadProgram(program);
     interpreter.interpret();
+    interpreter.stats();
     return 0;
 }
