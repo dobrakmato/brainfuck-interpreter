@@ -5,7 +5,7 @@
 int main(int argc, char *argv[]) {
     auto interpreter = Interpreter();
 
-    if (argc != 2) {
+    if (argc < 2) {
         printf("Usage: brainfuck_interpreter SOURCE_FILE\n");
         exit(1);
     }

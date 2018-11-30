@@ -7,9 +7,7 @@
 
 #include <string>
 #include <map>
-
-typedef unsigned char uint8;
-typedef unsigned long long uint32;
+#include "types.h"
 
 const uint8 OP_INCREMENT_POINTER = '>';
 const uint8 OP_DECREMENT_POINTER = '<';
