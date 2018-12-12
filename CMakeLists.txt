@@ -7,5 +7,5 @@ add_subdirectory(gtest)
 include_directories(gtest/googletest/include)
 include_directories(gtest/googlemock/include)
 
-add_executable(brainfuck_interpreter src/Interpreter.h src/Interpreter.cpp src/main.cpp test/test_interpreter.cpp src/Hashmap.cpp src/Hashmap.h src/types.h)
+add_executable(brainfuck_interpreter src/Interpreter.h src/Interpreter.cpp src/main.cpp test/test_interpreter.cpp src/Hashmap.h src/types.h test/test_hashmap.cpp)
 target_link_libraries(brainfuck_interpreter gtest gtest_main)
