@@ -1,5 +1,3 @@
-
-#include <stdexcept>
 #include "Interpreter.h"
 
 #define JUMP_TABLE
@@ -58,9 +56,9 @@ void Interpreter::opJmpFwd() {
 
 #ifdef JUMP_TABLE
         // check jump table
-        if (jumpTable[programCounter] != JUMP_TABLE_INITIAL_VALUE) {
+        if (jumpTable->has(programCounter)) {
             STAT_JT_HIT++;
-            programCounter = jumpTable[programCounter];
+            programCounter = jumpTable->get(programCounter);
             return;
         }
 #endif
@@ -91,7 +89,7 @@ void Interpreter::opJmpFwd() {
         }
 
         STAT_JT_MISS++;
-        jumpTable[programCounter] = pos + 1;
+        jumpTable->put(programCounter, pos + 1);
         programCounter = pos + 1;
     } else {
         programCounter++;
@@ -103,9 +101,9 @@ void Interpreter::opJmpBk() {
 
 #ifdef JUMP_TABLE
         // check jump table
-        if (jumpTable[programCounter] != JUMP_TABLE_INITIAL_VALUE) {
+        if (jumpTable->has(programCounter)) {
             STAT_JT_HIT++;
-            programCounter = jumpTable[programCounter];
+            programCounter = jumpTable->get(programCounter);
             return;
         }
 #endif
@@ -137,7 +135,7 @@ void Interpreter::opJmpBk() {
         }
 
         STAT_JT_MISS++;
-        jumpTable[programCounter] = pos;
+        jumpTable->put(programCounter, pos);
         programCounter = pos;
     } else {
         programCounter++;
@@ -169,9 +167,7 @@ void Interpreter::loadProgram(const std::string &program0) {
     program = program0;
 
     /* clear old program jump table */
-    for (uint32 i = 0; i < JUMP_TABLE_SIZE; i++) {
-        jumpTable[i] = JUMP_TABLE_INITIAL_VALUE;
-    }
+    jumpTable = new Hashmap<uint32, uint32>(256);
 }
 
 /**
@@ -181,7 +177,6 @@ void Interpreter::loadProgram(const std::string &program0) {
  * @return result of program
  */
 std::string Interpreter::interpret() {
-    std::fill_n(jumpTable, JUMP_TABLE_SIZE, JUMP_TABLE_INITIAL_VALUE);
     uint32 programLength = program.length();
     programCounter = 0;
 

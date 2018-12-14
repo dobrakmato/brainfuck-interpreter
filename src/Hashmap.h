@@ -7,8 +7,13 @@
 
 
 #include "types.h"
+#include <stdexcept>
 
-template<class K, class V>
+class KeyError : std::exception {
+
+};
+
+template<typename K, typename V>
 class Hashmap {
 
     class Entry {
@@ -18,79 +23,120 @@ class Hashmap {
         Entry *next = nullptr;
 
     public:
-        Entry(K key, V value, Entry* next) : key(key), value(value), next(next) {}
-    };
-
-    class Bucket {
-
-    public:
-        Entry *first = nullptr;
+        Entry(K key, V value, Entry *next) : key(key), value(value), next(next) {}
     };
 
 private:
-    Bucket **buckets;
-    uint32 size = 0;
-    uint32 entries = 0;
+    Entry **m_buckets;
+    uint32 m_size = 0;
+    uint32 m_entries = 0;
+    float m_loadFactor = 0.8f;
 
     uint32 hash(K key) {
-        return 0;
+        return key * 2654435761 % 2 ^ 32;
     }
 
-    void resize();
+    void resize() {
+        auto oldSize = m_size;
+        auto oldBuckets = m_buckets;
 
-public:
-    explicit Hashmap(uint32 size) {
-        this->buckets = new Bucket*[size];
-        this->size = size;
+        m_size = 2 * m_size;
+        m_entries = 0;
+        initializeBuckets();
+
+        for (uint32 i = 0; i < oldSize; i++) {
+            auto entry = oldBuckets[i];
+            if (entry == nullptr) continue;
+            put(entry->key, entry->value);
+
+            while (entry->next != nullptr) {
+                auto nextEntry = entry->next;
+                delete entry;
+                entry = nextEntry;
+                put(entry->key, entry->value);
+            }
+        }
+
+        delete oldBuckets;
+    }
+
+    void initializeBuckets() {
+        m_buckets = new Entry *[m_size];
+        for (uint32 i = 0; i < m_size; i++) {
+            m_buckets[i] = nullptr;
+        }
     }
 
 public:
-    bool has(K key);
+    explicit Hashmap(uint32 size, float loadFactor = 0.75f) {
+        this->m_size = size;
+        this->m_loadFactor = loadFactor;
+        initializeBuckets();
+    }
 
-    V get(K key);
+    bool has(K key) {
+        uint32 hash = this->hash(key);
+        auto entry = m_buckets[hash % m_size];
+
+        if (entry == nullptr) return false;
+        while (entry != nullptr) {
+            if (entry->key == key) {
+                return true;
+            }
+
+            entry = entry->next;
+        }
+        return false;
+    }
+
+    V get(K key) {
+        uint32 hash = this->hash(key);
+        auto entry = m_buckets[hash % m_size];
+
+        if (entry == nullptr) throw KeyError();
+        while (entry != nullptr) {
+            if (entry->key == key) {
+                return entry->value;
+            }
+
+            entry = entry->next;
+        }
+        throw KeyError();
+    }
 
     void put(const K key, const V value) {
         uint32 hash = this->hash(key);
-        auto bucket = buckets[hash % size];
+        auto entry = m_buckets[hash % m_size];
 
-        if (bucket->first == nullptr) {
-            bucket->first = new Entry(key, value, nullptr);
+        if (entry == nullptr) {
+            m_buckets[hash % m_size] = new Entry(key, value, nullptr);
+            m_entries++;
             return;
         }
 
-        auto entry = bucket->first;
-        while (entry->next != nullptr) entry = entry->next;
+        while (entry->next != nullptr) {
+            if (entry->key == key) {
+                entry->value = value;
+            }
+            entry = entry->next;
+        }
+
         entry->next = new Entry(key, value, nullptr);
+        m_entries++;
+
+        if ((float) m_entries / m_size > m_loadFactor) {
+            resize();
+        }
+    }
+
+    uint32 size() const {
+        return m_size;
+    }
+
+    uint32 entries() const {
+        return m_entries;
     }
 };
 
-
-
-/**
- * Returns the value stored in this hashmap for specified key. If there is
- * not value for specified key an exception is thrown.
- *
- * @tparam K
- * @tparam V
- * @param key
- * @return
- */
-template<class K, class V>
-V Hashmap<K, V>::get(K key) {
-    return 0;
-}
-
-/**
- * Checks if this hashmap contains specified key.
- *
- * @tparam K
- * @tparam V
- * @param key
- * @return
- */
-template<class K, class V>
-bool Hashmap<K, V>::has(K key) {
-    return true;
-}
 
 #endif //BRAINFUCK_INTERPRETER_HASHTABLE_H

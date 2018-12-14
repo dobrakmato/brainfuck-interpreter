@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    if (strcmp(argv[1], "--tests") != 0) {
+    if (strcmp(argv[1], "--tests") == 0) {
         ::testing::InitGoogleTest(&argc, argv);
         return RUN_ALL_TESTS();
     }

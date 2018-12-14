@@ -1,13 +1,10 @@
-//
-// Created by Matej on 30.10.2018.
-//
-
 #ifndef BRAINFUCK_INTERPRETER_INTERPRETER_H
 #define BRAINFUCK_INTERPRETER_INTERPRETER_H
 
 #include <string>
 #include <map>
 #include "types.h"
+#include "Hashmap.h"
 
 const uint8 OP_INCREMENT_POINTER = '>';
 const uint8 OP_DECREMENT_POINTER = '<';
@@ -18,8 +15,6 @@ const uint8 OP_LOAD = ',';
 const uint8 OP_JMP_FW = '[';
 const uint8 OP_JMP_BK = ']';
 
-const uint32 JUMP_TABLE_SIZE = 30000;
-constexpr uint32 JUMP_TABLE_INITIAL_VALUE = JUMP_TABLE_SIZE + 2;
 const uint32 MEMORY_SIZE = 30000;
 
 /**
@@ -32,7 +27,7 @@ private:
     uint32 programCounter = 0;
     std::string program;
     std::string outputBuffer;
-    uint32 jumpTable[JUMP_TABLE_SIZE] = {};
+    Hashmap<uint32, uint32>* jumpTable = new Hashmap<long long unsigned, long long unsigned>(256); // this for some reason does not compile with new Hashmap<uint32, uint32>()
     bool printToStdOut = true;
 
     uint8 fetchOp();
@@ -70,6 +65,7 @@ public:
     std::string interpret();
 
     void printStats();
+
 };
 
 #endif //BRAINFUCK_INTERPRETER_INTERPRETER_H
