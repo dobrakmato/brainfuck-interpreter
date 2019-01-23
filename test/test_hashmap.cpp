@@ -84,7 +84,7 @@ TEST_F(Test, testGet) {
 TEST_F(Test, testResize) {
     auto hashmap = new Hashmap<uint32, uint32>(4);
 
-    hashmap->put(1, 9);
+    hashmap->put(1, 4);
     hashmap->put(2, 9);
     hashmap->put(3, 8);
     hashmap->put(4, 8);

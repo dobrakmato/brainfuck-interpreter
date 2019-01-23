@@ -47,7 +47,12 @@ void Interpreter::opPrint() {
 
 void Interpreter::opLoad() {
     boundsCheck();
-    memory[pointer] = static_cast<uint8>(getchar());
+    if (input.empty()) {
+        memory[pointer] = static_cast<uint8>(getchar());
+    } else {
+        memory[pointer] = static_cast<uint8>(input.front());
+        input = input.substr(1);
+    }
     programCounter++;
 }
 
@@ -216,4 +221,8 @@ std::string Interpreter::interpret() {
     }
 
     return outputBuffer;
+}
+
+void Interpreter::setInput(const std::string &string) {
+    input = string;
 }

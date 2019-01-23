@@ -26,6 +26,7 @@ private:
     uint32 pointer = 0;
     uint32 programCounter = 0;
     std::string program;
+    std::string input;
     std::string outputBuffer;
     Hashmap<uint32, uint32>* jumpTable = new Hashmap<long long unsigned, long long unsigned>(256); // this for some reason does not compile with new Hashmap<uint32, uint32>()
     bool printToStdOut = true;
@@ -66,6 +67,7 @@ public:
 
     void printStats();
 
+    void setInput(const std::string &input);
 };
 
 #endif //BRAINFUCK_INTERPRETER_INTERPRETER_H

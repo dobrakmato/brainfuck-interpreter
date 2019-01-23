@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "gtest/gtest.h"
 #include "../src/Interpreter.h"
 
@@ -48,7 +49,8 @@ TEST_F(Test, testMultiplication) {
 TEST_F(Test, testHelloWorld) {
     auto interpreter = Interpreter();
     interpreter.setPrintToStdout(false);
-    interpreter.loadProgram("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
+    interpreter.loadProgram(
+            "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
     ASSERT_EQ("Hello World!\n", interpreter.interpret());
 }
 
@@ -59,4 +61,39 @@ TEST_F(Test, testHelloWorld2) {
     interpreter.loadProgram(">++++++++[-<+++++++++>]<.>>+>-[+]++>++>+++[>[->+++<<+++>]<<]>-----.>->\n"
                             "+++..+++.>-.<<+[>[+>+]>>]<--------------.>>.+++.------.--------.>+.>+.");
     ASSERT_EQ("Hello World!\n", interpreter.interpret());
+}
+
+TEST_F(Test, testPrimes) {
+    ifstream t("../sample-programs/primes.bf");
+    std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+
+    auto interpreter = Interpreter();
+    interpreter.setPrintToStdout(false);
+    interpreter.loadProgram(str);
+    interpreter.setInput("10\n");
+    ASSERT_EQ("Primes up to: 2 3 5 7 \n", interpreter.interpret());
+}
+
+TEST_F(Test, testPrimes2) {
+    ifstream t("../sample-programs/primes.bf");
+    std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+
+    auto interpreter = Interpreter();
+    interpreter.setPrintToStdout(false);
+    interpreter.loadProgram(str);
+    interpreter.setInput("30\n");
+    ASSERT_EQ("Primes up to: 2 3 5 7 11 13 17 19 23 29 \n", interpreter.interpret());
+}
+
+TEST_F(Test, testSierpinski) {
+    ifstream t("../sample-programs/sierpinski.bf");
+    std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+
+    auto interpreter = Interpreter();
+    interpreter.setPrintToStdout(false);
+    interpreter.loadProgram(str);
+    auto output = interpreter.interpret();
+    ASSERT_EQ(
+            "                                *    \n\r                               * *    \n\r                              *   *    \n\r                             * * * *    \n\r                            *       *    \n\r                           * *     * *    \n\r                          *   *   *   *    \n\r                         * * * * * * * *    \n\r                        *               *    \n\r                       * *             * *    \n\r                      *   *           *   *    \n\r                     * * * *         * * * *    \n\r                    *       *       *       *    \n\r                   * *     * *     * *     * *    \n\r                  *   *   *   *   *   *   *   *    \n\r                 * * * * * * * * * * * * * * * *    \n\r                *                               *    \n\r               * *                             * *    \n\r              *   *                           *   *    \n\r             * * * *                         * * * *    \n\r            *       *                       *       *    \n\r           * *     * *                     * *     * *    \n\r          *   *   *   *                   *   *   *   *    \n\r         * * * * * * * *                 * * * * * * * *    \n\r        *               *               *               *    \n\r       * *             * *             * *             * *    \n\r      *   *           *   *           *   *           *   *    \n\r     * * * *         * * * *         * * * *         * * * *    \n\r    *       *       *       *       *       *       *       *    \n\r   * *     * *     * *     * *     * *     * *     * *     * *    \n\r  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *    \n\r * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *    \n\r",
+            output);
 }
