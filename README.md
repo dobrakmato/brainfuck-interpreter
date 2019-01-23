@@ -1,5 +1,7 @@
 brainfuck-interpreter
 ----------------------
+[![Build Status](https://travis-ci.org/dobrakmato/brainfuck-interpreter.svg?branch=master)](https://travis-ci.org/dobrakmato/brainfuck-interpreter)
+[![Coverage Status](https://coveralls.io/repos/github/dobrakmato/brainfuck-interpreter/badge.svg?branch=master)](https://coveralls.io/github/dobrakmato/brainfuck-interpreter?branch=master)
 
 This is simple brainfuck interpreter with memory size of 30 000 cells. Memory size is constant and
 does not increase dynamically. Neither the negative memory 
@@ -34,10 +36,10 @@ Hello World!
 
 ## Tests
 
-To run tests, pass the `--tests` as the first argument.
+To run tests, use `ctest` or run tests manually `./bin/unit_tests`.
 
 ```
-$ ./brainfuck_interpreter --tests
+$ ./ctest
 [==========] Running 7 tests from 1 test case.
 [----------] Global test environment set-up.
 [----------] 7 tests from Test

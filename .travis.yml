@@ -19,7 +19,7 @@ script:
   - ctest --output-on-failure
 
 after_success:
-  - coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"
+  - coveralls --root .. -E ".*external.*" -E ".*/gtest/.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"
 
 notifications:
   email: false
