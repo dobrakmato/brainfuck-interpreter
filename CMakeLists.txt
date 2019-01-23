@@ -6,13 +6,15 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
 
-if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+if (CMAKE_CXX_COMPILER_ID MATCHES GNU)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-endif()
+endif ()
 
 add_subdirectory(gtest)
 include_directories(gtest/googletest/include)
 include_directories(gtest/googlemock/include)
+
+file(COPY sample-programs DESTINATION ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
 
 add_executable(brainfuck_interpreter src/Interpreter.h src/Interpreter.cpp src/main.cpp src/Hashmap.h src/types.h)
 target_link_libraries(brainfuck_interpreter)
