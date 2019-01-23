@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.9)
 project(brainfuck_interpreter)
 
 set(CMAKE_CXX_STANDARD 11)
+
+include(GNUInstallDirs)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
@@ -23,4 +25,4 @@ add_executable(unit_tests src/Interpreter.h src/Interpreter.cpp test/test_interp
 target_link_libraries(unit_tests gtest gtest_main)
 
 enable_testing()
-add_test(NAME unit COMMAND unit_tests)
+add_test(NAME unit COMMAND ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/unit_tests WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
