@@ -64,7 +64,7 @@ TEST_F(Test, testHelloWorld2) {
 }
 
 TEST_F(Test, testPrimes) {
-    ifstream t("../sample-programs/primes.bf");
+    ifstream t("../../sample-programs/primes.bf");
     std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
 
     auto interpreter = Interpreter();
@@ -75,7 +75,7 @@ TEST_F(Test, testPrimes) {
 }
 
 TEST_F(Test, testPrimes2) {
-    ifstream t("../sample-programs/primes.bf");
+    ifstream t("../../sample-programs/primes.bf");
     std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
 
     auto interpreter = Interpreter();
@@ -86,7 +86,7 @@ TEST_F(Test, testPrimes2) {
 }
 
 TEST_F(Test, testSierpinski) {
-    ifstream t("../sample-programs/sierpinski.bf");
+    ifstream t("../../sample-programs/sierpinski.bf");
     std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
 
     auto interpreter = Interpreter();
