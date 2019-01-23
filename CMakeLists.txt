@@ -21,4 +21,4 @@ add_executable(unit_tests src/Interpreter.h src/Interpreter.cpp test/test_interp
 target_link_libraries(unit_tests gtest gtest_main)
 
 enable_testing()
-add_test(NAME unit COMMAND ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/unit_tests)
+add_test(NAME unit COMMAND unit_tests)
