@@ -2,6 +2,7 @@ brainfuck-interpreter
 ----------------------
 [![Build Status](https://travis-ci.org/dobrakmato/brainfuck-interpreter.svg?branch=master)](https://travis-ci.org/dobrakmato/brainfuck-interpreter)
 [![Coverage Status](https://coveralls.io/repos/github/dobrakmato/brainfuck-interpreter/badge.svg?branch=master)](https://coveralls.io/github/dobrakmato/brainfuck-interpreter?branch=master)
+[![Codacy](https://api.codacy.com/project/badge/Grade/eac772ecb4b141b5a0a6a345f8d9f8c0)](https://app.codacy.com/project/dobrakmato/brainfuck-interpreter/dashboard)
 
 This is simple brainfuck interpreter with memory size of 30 000 cells. Memory size is constant and
 does not increase dynamically. Neither the negative memory 
