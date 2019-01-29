@@ -6,6 +6,6 @@
 #define BRAINFUCK_INTERPRETER_TYPES_H
 
 typedef unsigned char uint8;
-typedef unsigned long long uint32;
+typedef unsigned long uint32;
 
 #endif //BRAINFUCK_INTERPRETER_TYPES_H
