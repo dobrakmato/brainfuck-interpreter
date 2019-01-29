@@ -28,7 +28,7 @@ private:
     std::string program;
     std::string input;
     std::string outputBuffer;
-    Hashmap<uint32, uint32>* jumpTable = new Hashmap<long long unsigned, long long unsigned>(256); // this for some reason does not compile with new Hashmap<uint32, uint32>()
+    Hashmap<uint32, uint32>* jumpTable = new Hashmap<long unsigned, long unsigned>(256); // this for some reason does not compile with new Hashmap<uint32, uint32>()
     bool printToStdOut = true;
 
     uint8 fetchOp();
