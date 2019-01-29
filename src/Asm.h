@@ -59,8 +59,7 @@ private:
 public:
     explicit Asm(uint32 size) : m_size(size) {
 #ifndef PLATFORM_WINDOWS
-        m_dest = static_cast<char *>(mmap(nullptr, m_size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS,
-                                        -1, 0));
+        m_dest = static_cast<char *>(mmap(nullptr, m_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
 #else
         m_dest = static_cast<char *>(VirtualAlloc(nullptr, size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE));
 #endif

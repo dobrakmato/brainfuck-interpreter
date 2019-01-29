@@ -172,6 +172,8 @@ int32 Asm::run() {
     DWORD old;
     auto s = sizeof(*m_dest) * m_size;
     VirtualProtect(m_dest, s, PAGE_EXECUTE_READ, &old);
+#else
+    mprotect(m_dest, m_size, PROT_EXEC | PROT_READ);
 #endif
 
     auto f = reinterpret_cast<fn>(m_dest);
