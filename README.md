@@ -1,19 +1,35 @@
-brainfuck-interpreter
+brainfuck-jit
 ----------------------
 [![Build Status](https://travis-ci.org/dobrakmato/brainfuck-interpreter.svg?branch=master)](https://travis-ci.org/dobrakmato/brainfuck-interpreter)
+[![Build Status](https://ci.appveyor.com/api/projects/status/wn8wu8e4lk9tnjsa?svg=true)](https://ci.appveyor.com/project/dobrakmato/brainfuck-interpreter)
 [![Coverage Status](https://coveralls.io/repos/github/dobrakmato/brainfuck-interpreter/badge.svg?branch=master)](https://coveralls.io/github/dobrakmato/brainfuck-interpreter?branch=master)
 [![Codacy](https://api.codacy.com/project/badge/Grade/eac772ecb4b141b5a0a6a345f8d9f8c0)](https://app.codacy.com/project/dobrakmato/brainfuck-interpreter/dashboard)
 
-This is simple brainfuck interpreter with memory size of 30 000 cells. Memory size is constant and
-does not increase dynamically. Neither the negative memory 
+This is simple brainfuck VM with JIT compiler with interpreter as a backup. 
+
+Memory size is 30 000 cells. It is constant and does not increase dynamically. Neither the negative memory 
 cells are supported (memory does not extend to left).
 
-Memory access is protected (bounds checking is implemented) and interpreter ends with exit code 3 if
+If the architecture of system that is running the VM is supported as JIT compilation target the Brainfuck program is 
+first compiled and then run, otherwise it is run only with interpreter.
+
+Memory access is bounds-checked and interpreter ends with exit code 3 if
 illegal memory access is detected.
 
 If the program has unmatched brackets, the exit code 4 is returned.
 
 Interpreter performs some optimizations. To see what are they check the **Optimizations** part.
+
+JIT compiled code does **no memory bound checking** so wrong program can crash the VM. This simplifies generated
+machine code and speeds up execution. If brackets are unbalanced, code cannot be compiled - so the compilation
+fails.
+
+Currently the JIT compilation is possible for following targets:
+- Windows x86-64
+- Linux x86-64
+
+You can force interpreter mode by using `--interpret` flag.
+
 
 ## Building
 
@@ -27,20 +43,20 @@ $ make
 ## Running
 
 To run a brainfuck program, you must pass the path to program as first argument to the 
-interpreter application. Sending the program via standard input is not possible becuase
+compiler application. Sending the program via standard input is not possible becuase
 it would collide with interactively entered data by user while the program is running.
 
 ```
-$ brainfuck-interpreter hello_world.bf
+$ brainfuck-vm hello_world.bf
 Hello World!
 ```
 
-## Tests
+## Testing
 
-To run tests, use `ctest` or run tests manually `./bin/unit_tests`.
+To run included unit tests, use `ctest` command or run tests manually `./bin/unit_tests`.
 
 ```
-$ ./ctest
+$ ctest
 [==========] Running 7 tests from 1 test case.
 [----------] Global test environment set-up.
 [----------] 7 tests from Test
@@ -58,7 +74,7 @@ $ ./ctest
 
 ## Optimizations
 
-### Caching jumps to jump table
+### Interpreter - Caching jumps to jump table
 
 Brainfuck program use jumps very often, so caching them seems to be good direction in
 optimizing the interpreter.
@@ -97,6 +113,34 @@ sys     0m0.007s
 
 In this example we see almost 2x performance improvement. Printing of statistics
 can be disabled by passing `--no-stats` as second parameter of the application.
+
+### Compiler optimizations
+
+To improve the performance of generated assembly code compiler does several optimizations.
+
+
+#### Consecutive INC/DEC operations optimization
+Compiler replaces consecutive increment / decrement instructions with one addition / subtraction.
+
+```asm
+add ebx, 1
+add ebx, 1
+add ebx, 1
+```
+
+is replaced by 
+
+```asm
+add ebx, 3
+```
+
+## Performance 
+
+Below you can find table that compares performance of different execution profiles (interpreted code, JIT compiled, JIT compiled & optimized)
+
+|File|Interpreted|Interpreted + optimizations|JIT|JIT + optimizations|
+|----|-----------|---------------------------|---|-------------------|
+|mandelbrot.bf|0s|0s|0s|0s|
 
 ## Sample programs
 
