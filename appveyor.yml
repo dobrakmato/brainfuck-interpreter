@@ -6,6 +6,6 @@ before_build:
 build_script:
   - mkdir build
   - cd build
-  - cmake -G "MinGW Makefiles" -DCMAKE_SH="CMAKE_SH-NOTFOUND"..
+  - cmake -G "MinGW Makefiles" -DCMAKE_SH="CMAKE_SH-NOTFOUND" ..
   - cmake -DCMAKE_SH="CMAKE_SH-NOTFOUND" --build .
   - ctest --output-on-failure
