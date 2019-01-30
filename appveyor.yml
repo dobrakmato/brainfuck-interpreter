@@ -7,7 +7,7 @@ build_script:
   - mkdir build
   - cd build
   - cmake -G "MinGW Makefiles" -DCMAKE_SH="CMAKE_SH-NOTFOUND" ..
-  - cmake -DCMAKE_SH="CMAKE_SH-NOTFOUND" --build . --target all
+  - cmake --target all -DCMAKE_SH="CMAKE_SH-NOTFOUND" --build .
   - dir
   - cd bin
   - dir
