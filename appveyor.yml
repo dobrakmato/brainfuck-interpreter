@@ -1,8 +1,11 @@
 version: 'build #{build}'
 
+before_build:
+  - set Path=C:\msys64\mingw64\bin;%Path%
+
 build_script:
   - mkdir build
   - cd build
-  - cmake ..
+  - cmake -G "MinGW Makefiles" ..
   - cmake --build .
   - ctest --output-on-failure
