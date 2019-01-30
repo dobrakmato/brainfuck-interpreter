@@ -8,9 +8,4 @@ build_script:
   - cd build
   - cmake -G "MinGW Makefiles" -DCMAKE_SH="CMAKE_SH-NOTFOUND" ..
   - cmake --target all -DCMAKE_SH="CMAKE_SH-NOTFOUND" --build .
-  - dir
-  - cd bin
-  - dir
-  - cd ../../
-  - dir
   - ctest --output-on-failure
