@@ -1,7 +1,7 @@
 brainfuck-jit
 ----------------------
 [![Build Status](https://travis-ci.org/dobrakmato/brainfuck-interpreter.svg?branch=master)](https://travis-ci.org/dobrakmato/brainfuck-interpreter)
-[![Build Status](https://ci.appveyor.com/api/projects/status/wn8wu8e4lk9tnjsa?svg=true)](https://ci.appveyor.com/project/dobrakmato/brainfuck-interpreter)
+[![Build Status](https://ci.appveyor.com/api/projects/status/wn8wu8e4lk9tnjsa)](https://ci.appveyor.com/project/dobrakmato/brainfuck-interpreter)
 [![Coverage Status](https://coveralls.io/repos/github/dobrakmato/brainfuck-interpreter/badge.svg?branch=master)](https://coveralls.io/github/dobrakmato/brainfuck-interpreter?branch=master)
 [![Codacy](https://api.codacy.com/project/badge/Grade/eac772ecb4b141b5a0a6a345f8d9f8c0)](https://app.codacy.com/project/dobrakmato/brainfuck-interpreter/dashboard)
 
@@ -134,6 +134,16 @@ is replaced by
 add ebx, 3
 ```
 
+#### Consecutive subroutine calls
+
+#### Clear loops
+Replace `[-]` with `mov [ebx], 0`.
+
+Replace `[+]` with `mov [ebx], 0`.
+
+http://calmerthanyouare.org/2015/01/07/optimizing-brainfuck.html
+
+
 ## Performance 
 
 Below you can find table that compares performance of different execution profiles (interpreted code, JIT compiled, JIT compiled & optimized)
@@ -141,6 +151,9 @@ Below you can find table that compares performance of different execution profil
 |File|Interpreted|Interpreted + optimizations|JIT|JIT + optimizations|
 |----|-----------|---------------------------|---|-------------------|
 |mandelbrot.bf|0s|0s|0s|0s|
+|primes.bf (80)|0s|0s|0s|0s|
+|primes.bf (140)|0s|0s|0s|0s|
+|sierpinski.bf|0s|0s|0s|0s|
 
 ## Sample programs
 

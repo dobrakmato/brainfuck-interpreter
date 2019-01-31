@@ -3,35 +3,34 @@
 
 #include <string>
 #include <map>
-#include "types.h"
 #include "Hashmap.h"
 
-const uint8 OP_INCREMENT_POINTER = '>';
-const uint8 OP_DECREMENT_POINTER = '<';
-const uint8 OP_INCREMENT_VALUE = '+';
-const uint8 OP_DECREMENT_VALUE = '-';
-const uint8 OP_PRINT = '.';
-const uint8 OP_LOAD = ',';
-const uint8 OP_JMP_FW = '[';
-const uint8 OP_JMP_BK = ']';
+const uint8_t OP_INCREMENT_POINTER = '>';
+const uint8_t OP_DECREMENT_POINTER = '<';
+const uint8_t OP_INCREMENT_VALUE = '+';
+const uint8_t OP_DECREMENT_VALUE = '-';
+const uint8_t OP_PRINT = '.';
+const uint8_t OP_LOAD = ',';
+const uint8_t OP_JMP_FW = '[';
+const uint8_t OP_JMP_BK = ']';
 
-const uint32 MEMORY_SIZE = 30000;
+const uint32_t MEMORY_SIZE = 30000;
 
 /**
  * Simple but powerful Brainfuck interpreter.
  */
 class Interpreter {
 private:
-    uint8 memory[MEMORY_SIZE] = {0};
-    uint32 pointer = 0;
-    uint32 programCounter = 0;
+    uint8_t memory[MEMORY_SIZE] = {0};
+    uint32_t pointer = 0;
+    uint32_t programCounter = 0;
     std::string program;
     std::string input;
     std::string outputBuffer;
-    Hashmap<uint32, uint32>* jumpTable = new Hashmap<long unsigned, long unsigned>(256); // this for some reason does not compile with new Hashmap<uint32, uint32>()
+    Hashmap<uint32_t, uint32_t>* jumpTable = new Hashmap<int unsigned, int unsigned>(256); // this for some reason does not compile with new Hashmap<uint32, uint32>()
     bool printToStdOut = true;
 
-    uint8 fetchOp();
+    uint8_t fetchOp();
 
     void boundsCheck() {
         if (pointer < 0 || pointer >= MEMORY_SIZE) {
@@ -59,7 +58,7 @@ private:
 public:
     void setPrintToStdout(bool printToStdOut);
 
-    uint8 memoryAt(int address);
+    uint8_t memoryAt(int address);
 
     void loadProgram(const std::string &program);
 

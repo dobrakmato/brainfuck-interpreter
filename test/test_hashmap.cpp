@@ -1,6 +1,5 @@
 #include <iostream>
 #include "gtest/gtest.h"
-#include "../src/types.h"
 #include "../src/Hashmap.h"
 
 using namespace std;
@@ -8,16 +7,16 @@ using namespace std;
 using namespace ::testing;
 
 TEST_F(Test, testConstructor) {
-    auto hashmap = new Hashmap<uint32, uint32>(10);
+    auto hashmap = new Hashmap<int32_t, int32_t>(10);
     delete hashmap;
 }
 
 TEST_F(Test, testHasFalse) {
-    auto hashmap = new Hashmap<uint32, uint32>(10);
+    auto hashmap = new Hashmap<int32_t, int32_t>(10);
     ASSERT_FALSE(hashmap->has(1));
     ASSERT_FALSE(hashmap->has(11));
     ASSERT_FALSE(hashmap->has(9));
-    auto var = new uint32;
+    auto var = new int32_t;
     *var = 4;
     ASSERT_FALSE(hashmap->has(*var));
     delete var;
@@ -25,7 +24,7 @@ TEST_F(Test, testHasFalse) {
 }
 
 TEST_F(Test, testPut) {
-    auto hashmap = new Hashmap<uint32, uint32>(10);
+    auto hashmap = new Hashmap<int32_t, int32_t>(10);
     hashmap->put(1, 9);
     hashmap->put(2, 9);
     hashmap->put(3, 8);
@@ -38,7 +37,7 @@ TEST_F(Test, testPut) {
 }
 
 TEST_F(Test, testHas) {
-    auto hashmap = new Hashmap<uint32, uint32>(10);
+    auto hashmap = new Hashmap<int32_t, int32_t>(10);
     hashmap->put(1, 9);
     hashmap->put(2, 9);
     hashmap->put(3, 8);
@@ -60,7 +59,7 @@ TEST_F(Test, testHas) {
 }
 
 TEST_F(Test, testGet) {
-    auto hashmap = new Hashmap<uint32, uint32>(10);
+    auto hashmap = new Hashmap<int32_t, int32_t>(10);
 
     hashmap->put(1, 9);
     hashmap->put(2, 9);
@@ -82,7 +81,7 @@ TEST_F(Test, testGet) {
 }
 
 TEST_F(Test, testResize) {
-    auto hashmap = new Hashmap<uint32, uint32>(4);
+    auto hashmap = new Hashmap<int32_t, int32_t>(4);
 
     hashmap->put(1, 4);
     hashmap->put(2, 9);

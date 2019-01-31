@@ -1,12 +1,7 @@
-//
-// Created by matej on 11/30/18.
-//
-
 #ifndef BRAINFUCK_INTERPRETER_HASHTABLE_H
 #define BRAINFUCK_INTERPRETER_HASHTABLE_H
 
 
-#include "types.h"
 #include <stdexcept>
 
 class KeyError : std::exception {
@@ -28,11 +23,11 @@ class Hashmap {
 
 private:
     Entry **m_buckets;
-    uint32 m_size = 0;
-    uint32 m_entries = 0;
+    uint32_t m_size = 0;
+    uint32_t m_entries = 0;
     float m_loadFactor = 0.8f;
 
-    uint32 hash(K key) {
+    uint32_t hash(K key) {
         return key * 2654435761 % 2 ^ 32;
     }
 
@@ -44,7 +39,7 @@ private:
         m_entries = 0;
         initializeBuckets();
 
-        for (uint32 i = 0; i < oldSize; i++) {
+        for (uint32_t i = 0; i < oldSize; i++) {
             auto entry = oldBuckets[i];
             if (entry == nullptr) continue;
             put(entry->key, entry->value);
@@ -62,20 +57,20 @@ private:
 
     void initializeBuckets() {
         m_buckets = new Entry *[m_size];
-        for (uint32 i = 0; i < m_size; i++) {
+        for (uint32_t i = 0; i < m_size; i++) {
             m_buckets[i] = nullptr;
         }
     }
 
 public:
-    explicit Hashmap(uint32 size, float loadFactor = 0.75f) {
+    explicit Hashmap(uint32_t size, float loadFactor = 0.75f) {
         this->m_size = size;
         this->m_loadFactor = loadFactor;
         initializeBuckets();
     }
 
     bool has(K key) {
-        uint32 hash = this->hash(key);
+        uint32_t hash = this->hash(key);
         auto entry = m_buckets[hash % m_size];
 
         if (entry == nullptr) return false;
@@ -90,7 +85,7 @@ public:
     }
 
     V get(K key) {
-        uint32 hash = this->hash(key);
+        uint32_t hash = this->hash(key);
         auto entry = m_buckets[hash % m_size];
 
         if (entry == nullptr) throw KeyError();
@@ -105,7 +100,7 @@ public:
     }
 
     void put(const K key, const V value) {
-        uint32 hash = this->hash(key);
+        uint32_t hash = this->hash(key);
         auto entry = m_buckets[hash % m_size];
 
         if (entry == nullptr) {
@@ -129,11 +124,11 @@ public:
         }
     }
 
-    uint32 size() const {
+    uint32_t size() const {
         return m_size;
     }
 
-    uint32 entries() const {
+    uint32_t entries() const {
         return m_entries;
     }
 };

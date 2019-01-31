@@ -17,9 +17,8 @@
 #endif
 
 #include <map>
-#include "types.h"
 
-#define CHAR(x) static_cast<char>(x)
+#define CHAR(x) static_cast<int8_t>(x)
 
 enum Register {
     RAX = 0,
@@ -30,6 +29,14 @@ enum Register {
     RBP = 5,
     RSI = 6,
     RDI = 7,
+    R8 = 8,
+    R9 = 9,
+    R10 = 10,
+    R11 = 11,
+    R12 = 12,
+    R13 = 13,
+    R14 = 14,
+    R15 = 15,
 };
 
 enum Memory {
@@ -41,39 +48,51 @@ enum Memory {
     MEMORY_RBP = 5,
     MEMORY_RSI = 6,
     MEMORY_RDI = 7,
+    MEMORY_R8 = 8,
+    MEMORY_R9 = 9,
+    MEMORY_R10 = 10,
+    MEMORY_R11 = 11,
+    MEMORY_R12 = 12,
+    MEMORY_R13 = 13,
+    MEMORY_R14 = 14,
+    MEMORY_R15 = 15,
 };
 
-typedef long(*fn)();
+typedef int32_t(*fn)();
 
 class Asm {
 private:
-    char *m_dest;
-    uint32 m_addr = 0;
-    uint32 m_size;
-    std::map<std::string, uint32> m_labels;
+    int8_t *m_dest;
+    uint32_t m_addr = 0;
+    uint32_t m_size;
+    std::map<std::string, uint32_t> m_labels;
 
-    const void imm(char imm8);
+    const void imm(int8_t imm8);
 
-    const void imm(long imm32);
+    const void imm(int32_t imm32);
+
+    const void imm(int64_t imm64);
 
 public:
-    explicit Asm(uint32 size) : m_size(size) {
+    explicit Asm(uint32_t size) : m_size(size) {
 #ifndef PLATFORM_WINDOWS
-        m_dest = static_cast<char *>(mmap(nullptr, m_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
+        m_dest = static_cast<int8_t *>(mmap(nullptr, m_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
 #else
-        m_dest = static_cast<char *>(VirtualAlloc(nullptr, size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE));
+        m_dest = static_cast<int8_t *>(VirtualAlloc(nullptr, size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE));
 #endif
+        /* fill with INT3 to easier debugging */
+        std::fill(m_dest, m_dest + m_size, 0xCC);
     }
 
-    const std::map<std::string, uint32> labels() {
+    const std::map<std::string, uint32_t> labels() {
         return m_labels;
     }
 
-    const uint32 address() {
+    const uint32_t address() {
         return m_addr;
     }
 
-    const uint32 allocated() {
+    const uint32_t allocated() {
         return m_size;
     }
 
@@ -93,21 +112,23 @@ public:
 
     void DEC(Register reg);
 
-    void ADD(Register reg, long imm32);
+    void ADD(Register reg, int32_t imm32);
 
-    void ADD(Memory reg, long imm32);
+    void ADD(Memory reg, int32_t imm32);
 
-    void ADD(Memory reg, char imm8);
+    void ADD(Memory reg, int8_t imm8);
 
-    void SUB(Register reg, long imm32);
+    void SUB(Register reg, int32_t imm32);
 
-    void SUB(Memory reg, long imm32);
+    void SUB(Memory reg, int32_t imm32);
 
-    void SUB(Memory reg, char imm8);
+    void SUB(Memory reg, int8_t imm8);
 
     void XOR(Register reg);
 
-    void MOV(Register reg, long imm32);
+    void MOV(Register reg, int32_t imm32);
+
+    void MOV(Register reg, int64_t imm64);
 
     void MOV(Register write, Register read);
 
@@ -115,15 +136,15 @@ public:
 
     void MOV(Memory write, Register read);
 
-    void CMP(Register reg, long imm32);
+    void CMP(Register reg, int32_t imm32);
 
-    void CMP(Memory reg, long imm32);
+    void CMP(Memory reg, int32_t imm32);
 
-    void CMP(Memory reg, char imm8);
+    void CMP(Memory reg, int8_t imm8);
 
-    void JNE(long relativeAddress);
+    void JNE(int32_t relativeAddress);
 
-    void JE(long relativeAddress);
+    void JE(int32_t relativeAddress);
 
     void JNE(const std::string &label);
 
@@ -133,7 +154,7 @@ public:
 
     void RET();
 
-    int32 run();
+    int32_t run();
 };
 
 

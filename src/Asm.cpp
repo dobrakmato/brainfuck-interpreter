@@ -1,16 +1,26 @@
 #include "Asm.h"
 
-const void Asm::imm(char imm8) {
+const void Asm::imm(int8_t imm8) {
     m_dest[m_addr++] = imm8;
 }
 
-const void Asm::imm(long imm32) {
+const void Asm::imm(int32_t imm32) {
     m_dest[m_addr++] = CHAR(imm32 & 0xFF);
     m_dest[m_addr++] = CHAR((imm32 >> 8) & 0xFF);
     m_dest[m_addr++] = CHAR((imm32 >> 16) & 0xFF);
     m_dest[m_addr++] = CHAR((imm32 >> 24) & 0xFF);
 }
 
+const void Asm::imm(int64_t imm64) {
+    m_dest[m_addr++] = CHAR(imm64 & 0xFF);
+    m_dest[m_addr++] = CHAR((imm64 >> 8) & 0xFF);
+    m_dest[m_addr++] = CHAR((imm64 >> 16) & 0xFF);
+    m_dest[m_addr++] = CHAR((imm64 >> 24) & 0xFF);
+    m_dest[m_addr++] = CHAR((imm64 >> 32) & 0xFF);
+    m_dest[m_addr++] = CHAR((imm64 >> 40) & 0xFF);
+    m_dest[m_addr++] = CHAR((imm64 >> 48) & 0xFF);
+    m_dest[m_addr++] = CHAR((imm64 >> 56) & 0xFF);
+}
 
 void Asm::INC(Memory reg) {
     m_dest[m_addr++] = CHAR(0xFE); // inc
@@ -36,42 +46,44 @@ void Asm::DEC(Register reg) {
 
 // -------
 
-void Asm::ADD(Register reg, int32 imm32) {
+void Asm::ADD(Register reg, int32_t imm32) {
+    m_dest[m_addr++] = CHAR(0x48); // REX.W
     m_dest[m_addr++] = CHAR(0x81); // add
     m_dest[m_addr++] = CHAR(0xc0 + reg); // rax
 
     imm(imm32);
 }
 
-void Asm::ADD(Memory reg, int32 imm32) {
+void Asm::ADD(Memory reg, int32_t imm32) {
     m_dest[m_addr++] = CHAR(0x81); // add
     m_dest[m_addr++] = CHAR(0x00 + reg); // rax
 
     imm(imm32);
 }
 
-void Asm::ADD(Memory reg, int8 imm8) {
+void Asm::ADD(Memory reg, int8_t imm8) {
     m_dest[m_addr++] = CHAR(0x80); // add
     m_dest[m_addr++] = CHAR(0x00 + reg); // reg
 
     imm(imm8);
 }
 
-void Asm::SUB(Register reg, int32 imm32) {
+void Asm::SUB(Register reg, int32_t imm32) {
+    m_dest[m_addr++] = CHAR(0x48); // REX.W
     m_dest[m_addr++] = CHAR(0x81); // sub
     m_dest[m_addr++] = CHAR(0xe8 + reg); // opcode 5 + reg
 
     imm(imm32);
 }
 
-void Asm::SUB(Memory reg, int32 imm32) {
+void Asm::SUB(Memory reg, int32_t imm32) {
     m_dest[m_addr++] = CHAR(0x81); // sub
     m_dest[m_addr++] = CHAR(0x38 + reg); // opcode 5 + reg
 
     imm(imm32);
 }
 
-void Asm::SUB(Memory reg, int8 imm8) {
+void Asm::SUB(Memory reg, int8_t imm8) {
     m_dest[m_addr++] = CHAR(0x80); // sub
     m_dest[m_addr++] = CHAR(0x28 + reg); // reg
 
@@ -85,11 +97,18 @@ void Asm::XOR(Register reg) {
     m_dest[m_addr++] = CHAR(0xc0 + val); // reg, reg
 }
 
-void Asm::MOV(Register reg, int32 imm32) {
+void Asm::MOV(Register reg, int32_t imm32) {
     m_dest[m_addr++] = CHAR(0xC7); // mov
     m_dest[m_addr++] = CHAR(0xc0 + reg); // opcode 0 + reg
 
     imm(imm32);
+}
+
+void Asm::MOV(Register reg, int64_t imm64) {
+    m_dest[m_addr++] = CHAR(0x48); // REX.W
+    m_dest[m_addr++] = CHAR(0xB8 + reg); // mov
+
+    imm(imm64);
 }
 
 void Asm::MOV(Register write, Register read) {
@@ -108,28 +127,28 @@ void Asm::MOV(Memory write, Register read) {
     m_dest[m_addr++] = CHAR(0x00 + 8 * read + write); // [read], write
 }
 
-void Asm::CMP(Register reg, int32 imm32) {
+void Asm::CMP(Register reg, int32_t imm32) {
     m_dest[m_addr++] = CHAR(0x81); // cmp
     m_dest[m_addr++] = CHAR(0xf8 + reg); // opcode 7 + register
 
     imm(imm32);
 }
 
-void Asm::CMP(Memory reg, int32 imm32) {
+void Asm::CMP(Memory reg, int32_t imm32) {
     m_dest[m_addr++] = CHAR(0x81); // cmp
     m_dest[m_addr++] = CHAR(0x38 + reg); // opcode 7 + [register]
 
     imm(imm32);
 }
 
-void Asm::CMP(Memory reg, int8 imm8) {
+void Asm::CMP(Memory reg, int8_t imm8) {
     m_dest[m_addr++] = CHAR(0x80); // cmp
     m_dest[m_addr++] = CHAR(0x38 + reg); // opcode 7 + [register]
 
     imm(imm8);
 }
 
-void Asm::JNE(int32 relativeAddress) {
+void Asm::JNE(int32_t relativeAddress) {
     m_dest[m_addr++] = CHAR(0x0f); // 0F prefix
     m_dest[m_addr++] = CHAR(0x85); // jne
 
@@ -137,7 +156,7 @@ void Asm::JNE(int32 relativeAddress) {
 }
 
 
-void Asm::JE(int32 relativeAddress) {
+void Asm::JE(int32_t relativeAddress) {
     m_dest[m_addr++] = CHAR(0x0f); // 0F prefix
     m_dest[m_addr++] = CHAR(0x84); // je
 
@@ -167,7 +186,7 @@ void Asm::RET() {
     m_dest[m_addr++] = CHAR(0xc3); // ret
 }
 
-int32 Asm::run() {
+int32_t Asm::run() {
 #ifdef PLATFORM_WINDOWS
     DWORD old;
     auto s = sizeof(*m_dest) * m_size;

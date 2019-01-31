@@ -1,12 +1,12 @@
 #include "Jit.h"
 
 double STAT_COMPILE_TIME = 0;
-uint64 STAT_ALLOCATED_BYTES = 0;
-uint64 STAT_COMPILED_BYTES = 0;
+uint64_t STAT_ALLOCATED_BYTES = 0;
+uint64_t STAT_COMPILED_BYTES = 0;
 
 void Jit::printStats() {
-    printf("STAT_COMPILED_BYTES=%llu\n", STAT_COMPILED_BYTES);
-    printf("STAT_ALLOCATED_BYTES=%llu\n", STAT_ALLOCATED_BYTES);
+    printf("STAT_COMPILED_BYTES=%lu\n", STAT_COMPILED_BYTES);
+    printf("STAT_ALLOCATED_BYTES=%lu\n", STAT_ALLOCATED_BYTES);
     printf("STAT_COMPILE_TIME=%f\n", STAT_COMPILE_TIME);
 }
 
@@ -21,13 +21,13 @@ void Jit::compile() {
     // rsi -> putchar fn
     // rdi -> getchar fn
 
-    uint32 parenDepth = 0;
-    uint32 parenIdStack[MAX_NESTING];
-    auto jitMemoryAddr = static_cast<long>((long long) &jitMemory);
+    uint32_t parenDepth = 0;
+    uint32_t parenIdStack[MAX_NESTING];
+    auto jitMemoryAddr = reinterpret_cast<int64_t>(jitMemory);
 
     compiled.MOV(RBX, jitMemoryAddr);
-    compiled.MOV(RSI, static_cast<long>(reinterpret_cast<long long>(putchar)));
-    compiled.MOV(RDI, static_cast<long>(reinterpret_cast<long long>(getchar)));
+    compiled.MOV(RSI, reinterpret_cast<int64_t>(putchar));
+    compiled.MOV(RDI, reinterpret_cast<int64_t>(getchar));
 
     // step 1: compile bf to asm with invalid addresses in [ jumps
     for (auto ch : program) {
@@ -39,10 +39,10 @@ void Jit::compile() {
                 compiled.SUB(RBX, 1);
                 break;
             case OP_INCREMENT_VALUE:
-                compiled.ADD(MEMORY_RBX, (char) 1);
+                compiled.ADD(MEMORY_RBX, (int8_t) 1);
                 break;
             case OP_DECREMENT_VALUE:
-                compiled.SUB(MEMORY_RBX, (char) 1);
+                compiled.SUB(MEMORY_RBX, (int8_t) 1);
                 break;
             case OP_PRINT:
                 compiled.MOV(RCX, MEMORY_RBX); // mov rcx, [rbx]
@@ -57,11 +57,11 @@ void Jit::compile() {
                 parenIdStack[parenDepth]++;
 
                 compiled.label("[" + to_string(parenDepth) + "_" + to_string(parenIdStack[parenDepth]));
-                compiled.CMP(MEMORY_RBX, (char) 0);
+                compiled.CMP(MEMORY_RBX, (int8_t) 0);
                 compiled.JE(0xDEADBEEF); // jump after matching ...]_....
                 break;
             case OP_JMP_BK:
-                compiled.CMP(MEMORY_RBX, (char) 0);
+                compiled.CMP(MEMORY_RBX, (int8_t) 0);
                 compiled.JNE("[" + to_string(parenDepth) + "_" +
                              to_string(parenIdStack[parenDepth])); // jump before matching ...._[....
 
@@ -86,7 +86,7 @@ void Jit::compile() {
         if (x.first[0] == '[') {
             compiled.setAddressByLabel(x.first); // reset internal codegen pointer
 
-            compiled.CMP(MEMORY_RBX, (char) 0);
+            compiled.CMP(MEMORY_RBX, (int8_t) 0);
             compiled.JE("]" + x.first.substr(1));
         }
     }

@@ -48,9 +48,9 @@ void Interpreter::opPrint() {
 void Interpreter::opLoad() {
     boundsCheck();
     if (input.empty()) {
-        memory[pointer] = static_cast<uint8>(getchar());
+        memory[pointer] = static_cast<uint8_t>(getchar());
     } else {
-        memory[pointer] = static_cast<uint8>(input.front());
+        memory[pointer] = static_cast<uint8_t>(input.front());
         input = input.substr(1);
     }
     programCounter++;
@@ -69,8 +69,8 @@ void Interpreter::opJmpFwd() {
 #endif
 
         // find other parentheses
-        uint32 paren = 1;
-        uint32 pos = programCounter + 1;
+        uint32_t paren = 1;
+        uint32_t pos = programCounter + 1;
 
         while (true) {
             if (program[pos] == OP_JMP_BK) {
@@ -114,8 +114,8 @@ void Interpreter::opJmpBk() {
 #endif
 
         // find other parentheses
-        uint32 paren = 1;
-        uint32 pos = programCounter - 1;
+        uint32_t paren = 1;
+        uint32_t pos = programCounter - 1;
 
         while (true) {
 
@@ -151,8 +151,8 @@ void Interpreter::opJmpBk() {
  * Returns the next operation of program.
  * @return next operation
  */
-uint8 Interpreter::fetchOp() {
-    return static_cast<uint8>(program[programCounter]);
+uint8_t Interpreter::fetchOp() {
+    return static_cast<uint8_t>(program[programCounter]);
 }
 
 /***
@@ -160,7 +160,7 @@ uint8 Interpreter::fetchOp() {
  * @param address address to return value of
  * @return value of address
  */
-uint8 Interpreter::memoryAt(int address) {
+uint8_t Interpreter::memoryAt(int address) {
     return memory[address];
 }
 
@@ -172,7 +172,7 @@ void Interpreter::loadProgram(const std::string &program0) {
     program = program0;
 
     /* clear old program jump table */
-    jumpTable = new Hashmap<uint32, uint32>(256);
+    jumpTable = new Hashmap<uint32_t, uint32_t>(256);
 }
 
 /**
@@ -182,7 +182,7 @@ void Interpreter::loadProgram(const std::string &program0) {
  * @return result of program
  */
 std::string Interpreter::interpret() {
-    uint32 programLength = program.length();
+    uint64_t programLength = program.length();
     programCounter = 0;
 
     while (programCounter != programLength) {
