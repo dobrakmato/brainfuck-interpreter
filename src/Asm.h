@@ -19,6 +19,13 @@
 #include <map>
 
 #define CHAR(x) static_cast<int8_t>(x)
+#define COND_BIT_OR(cond, val) cond ? val : 0
+
+/* 64bit operands */
+#define REX_W 01001000
+#define REX_R 01000100
+#define REX_X 01000010
+#define REX_B 01000001
 
 enum Register {
     RAX = 0,
@@ -104,41 +111,20 @@ public:
         m_addr = m_labels.at(name);
     }
 
-    void INC(Memory reg);
-
-    void DEC(Memory reg);
-
-    void INC(Register reg);
-
-    void DEC(Register reg);
 
     void ADD(Register reg, int32_t imm32);
-
-    void ADD(Memory reg, int32_t imm32);
 
     void ADD(Memory reg, int8_t imm8);
 
     void SUB(Register reg, int32_t imm32);
 
-    void SUB(Memory reg, int32_t imm32);
-
     void SUB(Memory reg, int8_t imm8);
 
-    void XOR(Register reg);
-
-    void MOV(Register reg, int32_t imm32);
-
     void MOV(Register reg, int64_t imm64);
-
-    void MOV(Register write, Register read);
 
     void MOV(Register write, Memory read);
 
     void MOV(Memory write, Register read);
-
-    void CMP(Register reg, int32_t imm32);
-
-    void CMP(Memory reg, int32_t imm32);
 
     void CMP(Memory reg, int8_t imm8);
 

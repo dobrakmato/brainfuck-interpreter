@@ -26,8 +26,8 @@ void Jit::compile() {
     auto jitMemoryAddr = reinterpret_cast<int64_t>(jitMemory);
 
     compiled.MOV(RBX, jitMemoryAddr);
-    compiled.MOV(RSI, reinterpret_cast<int64_t>(putchar));
-    compiled.MOV(RDI, reinterpret_cast<int64_t>(getchar));
+    compiled.MOV(RCX, reinterpret_cast<int64_t>(putchar));
+    compiled.MOV(RDX, reinterpret_cast<int64_t>(getchar));
 
     // step 1: compile bf to asm with invalid addresses in [ jumps
     for (auto ch : program) {
@@ -45,11 +45,11 @@ void Jit::compile() {
                 compiled.SUB(MEMORY_RBX, (int8_t) 1);
                 break;
             case OP_PRINT:
-                compiled.MOV(RCX, MEMORY_RBX); // mov rcx, [rbx]
-                compiled.CALL(RSI); // call putchar
+                compiled.MOV(RDI, MEMORY_RBX); // mov rdi, [rbx]
+                compiled.CALL(RCX); // call putchar
                 break;
             case OP_LOAD:
-                compiled.CALL(RDI); // call getchar
+                compiled.CALL(RDX); // call getchar
                 compiled.MOV(MEMORY_RBX, RAX); // mov [rbx], rax
                 break;
             case OP_JMP_FW:
