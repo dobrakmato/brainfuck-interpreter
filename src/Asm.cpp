@@ -25,7 +25,7 @@ const void Asm::imm(int64_t imm64) {
 // =====================================================
 
 void Asm::ADD(Register reg, int32_t imm32) {
-    m_dest[m_addr++] = CHAR(REX_W | reg > R8 ? REX_B : 0); // REX.W + REX.B?
+    m_dest[m_addr++] = CHAR(REX_W | (reg >= R8 ? REX_B : 0)); // REX.W + REX.B?
     m_dest[m_addr++] = CHAR(0x81); // add
     m_dest[m_addr++] = CHAR(0xc0 + reg); // rax
 
@@ -40,7 +40,7 @@ void Asm::ADD(Memory reg, int8_t imm8) {
 }
 
 void Asm::SUB(Register reg, int32_t imm32) {
-    m_dest[m_addr++] = CHAR(REX_W | reg > R8 ? REX_B : 0);
+    m_dest[m_addr++] = CHAR(REX_W | reg >= R8 ? REX_B : 0);
     m_dest[m_addr++] = CHAR(0x81); // sub
     m_dest[m_addr++] = CHAR(0xe8 + reg); // opcode 5 + reg
 
@@ -55,7 +55,7 @@ void Asm::SUB(Memory reg, int8_t imm8) {
 }
 
 void Asm::MOV(Register reg, int64_t imm64) {
-    m_dest[m_addr++] = CHAR(0x48 | reg > R8 ? REX_B : 0); // REX.W
+    m_dest[m_addr++] = CHAR(0x48 | (reg >= R8 ? REX_B : 0)); // REX.W
     m_dest[m_addr++] = CHAR(0xB8 + reg); // mov
 
     imm(imm64);

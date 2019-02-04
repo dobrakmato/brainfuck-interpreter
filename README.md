@@ -25,11 +25,10 @@ machine code and speeds up execution. If brackets are unbalanced, code cannot be
 fails.
 
 Currently the JIT compilation is possible for following targets:
-- Windows x86-64
-- Linux x86-64
+  - Windows x86-64
+  - Linux x86-64
 
 You can force interpreter mode by using `--interpret` flag.
-
 
 ## Building
 
@@ -118,7 +117,6 @@ can be disabled by passing `--no-stats` as second parameter of the application.
 
 To improve the performance of generated assembly code compiler does several optimizations.
 
-
 #### Consecutive INC/DEC operations optimization
 Compiler replaces consecutive increment / decrement instructions with one addition / subtraction.
 
@@ -142,7 +140,6 @@ Replace `[-]` with `mov [ebx], 0`.
 Replace `[+]` with `mov [ebx], 0`.
 
 http://calmerthanyouare.org/2015/01/07/optimizing-brainfuck.html
-
 
 ## Performance 
 
@@ -170,7 +167,7 @@ sierpinski.bf - Draws sierpinski triangle.
 
 For example running `mandelbrot.bf` produces the following output:
 
-```
+```text
 $ ./brainfuck_interpreter ../sample-programs/mandelbrot.bf 
 AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCDDDDDDDDDEGFFEEEEDDDDDDCCCCCCCCCBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 AAAAAAAAAAAAAAABBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCDDDDDDDDDDEEEFGIIGFFEEEDDDDDDDDCCCCCCCCCBBBBBBBBBBBBBBBBBBBBBBBBBB
