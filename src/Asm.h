@@ -19,7 +19,6 @@
 #include <map>
 
 #define CHAR(x) static_cast<int8_t>(x)
-#define COND_BIT_OR(cond, val) cond ? val : 0
 
 /* 64bit operands */
 #define REX_W 01001000

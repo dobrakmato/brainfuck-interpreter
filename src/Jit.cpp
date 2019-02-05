@@ -25,9 +25,12 @@ void Jit::compile() {
     uint32_t parenIdStack[MAX_NESTING];
     auto jitMemoryAddr = reinterpret_cast<int64_t>(jitMemory);
 
+    const auto PUTCHAR_REGISTER = abi->freeRegisters()[1];
+    const auto GETCHAR_REGISTER =  abi->freeRegisters()[2];
+
     compiled.MOV(RBX, jitMemoryAddr);
-    compiled.MOV(RCX, reinterpret_cast<int64_t>(putchar));
-    compiled.MOV(RDX, reinterpret_cast<int64_t>(getchar));
+    compiled.MOV(PUTCHAR_REGISTER, reinterpret_cast<int64_t>(putchar));
+    compiled.MOV(GETCHAR_REGISTER, reinterpret_cast<int64_t>(getchar));
 
     // step 1: compile bf to asm with invalid addresses in [ jumps
     for (auto ch : program) {
@@ -45,11 +48,11 @@ void Jit::compile() {
                 compiled.SUB(MEMORY_RBX, (int8_t) 1);
                 break;
             case OP_PRINT:
-                compiled.MOV(RDI, MEMORY_RBX); // mov rdi, [rbx]
-                compiled.CALL(RCX); // call putchar
+                compiled.MOV(abi->firstParameterRegister(), MEMORY_RBX); // mov rdi, [rbx]
+                compiled.CALL(PUTCHAR_REGISTER); // call putchar
                 break;
             case OP_LOAD:
-                compiled.CALL(RDX); // call getchar
+                compiled.CALL(GETCHAR_REGISTER); // call getchar
                 compiled.MOV(MEMORY_RBX, RAX); // mov [rbx], rax
                 break;
             case OP_JMP_FW:

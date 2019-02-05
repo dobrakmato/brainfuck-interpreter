@@ -40,7 +40,7 @@ void Asm::ADD(Memory reg, int8_t imm8) {
 }
 
 void Asm::SUB(Register reg, int32_t imm32) {
-    m_dest[m_addr++] = CHAR(REX_W | reg >= R8 ? REX_B : 0);
+    m_dest[m_addr++] = CHAR(REX_W | (reg >= R8 ? REX_B : 0));
     m_dest[m_addr++] = CHAR(0x81); // sub
     m_dest[m_addr++] = CHAR(0xe8 + reg); // opcode 5 + reg
 
